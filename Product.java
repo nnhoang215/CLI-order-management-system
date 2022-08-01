@@ -5,39 +5,45 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Arrays;
 
 public class Product {
     public static void main(String[] args) {
         List<Product> products = readProduct(
                 "C:/Users/Admin/IdeaProjects/Welcome/out/production/Welcome/programming1/product.csv");
+
+        for(Product p: products){
+            System.out.println(p);
+        }
     }
 
     private static ArrayList<Product> readProduct(String path){
         String line;
        ArrayList<Product> products = new ArrayList<>();
-       int i = 0;
 
         try{
             BufferedReader br = new BufferedReader(new FileReader(path));
+            String headerLine = br.readLine();
+            //System.out.println(headerLine);
             while((line= br.readLine())!=null){
-
                 String[] attributes = line.split(",");
-                if(i==0){
-                    continue;
-
-                }
-                System.out.println(attributes[0]);
-                Product product = new Product(Integer.parseInt(attributes[0]),attributes[1],attributes[2],
-                        Float.parseFloat(attributes[3]),Integer.parseInt(attributes[4]));
+                //System.out.println(attributes[0]);
+                Product product = createProduct(attributes);
                 products.add(product);
-                i++;
+                //System.out.println(product);
+
             }
         }catch (IOException e){
             e.printStackTrace();
         }
-
         return products;
+    }
+    private static Product createProduct(String[] metadata){
+        int productID = Integer.parseInt(metadata[0]);
+        String productName = metadata[1];
+        String category = metadata[2];
+        float price = Float.parseFloat(metadata[3]);
+        int quantity = Integer.parseInt(metadata[4]);
+        return new Product(productID,productName,category,price,quantity);
     }
 
     private int productID;
@@ -67,6 +73,11 @@ public class Product {
     }
     public int getQuantity(){
         return quantity;
+    }
+
+    public String toString(){
+        return "productID:"+productID + ",productName:"+ productName +
+                ",category:" + category + ",price:" + price + ",quantity:"+quantity;
     }
 }
 
